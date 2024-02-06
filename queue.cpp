@@ -1,10 +1,10 @@
-#include <stdion.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
 
 struct node{
 	int data;
-	strcut node* next;
+	struct node* next;
 };
 
 struct queue{
@@ -12,37 +12,57 @@ struct queue{
 	struct node* rear;
 };
 
-struct queue *push(struct queue *q,int val){
-	struct node *ptr;
-	ptr=(struct node*)malloc(sizeof(strcut node));
-	ptr->data=val;
-	ptr->next=NULL;
-	if(q->front==NULL){
-		q->front=ptr;
-		q->rear=ptr;
-		q->front->next=q->rear->next=NULL;
+void enqueue(int data, struct queue **q){
+	struct node* newNode=(struct node*)malloc(sizeof(struct node));
+	newNode->data=data;
+	newNode->next=NULL;
+	if((*q)->front==NULL){
+		(*q)->front=newNode;
+		(*q)->rear=newNode;
+		(*q)->front->next=(*q)->rear->next=NULL;
+	
 	}
 	else{
-		q->rear->next=ptr;
-		q->rear=ptr;
-		
+		(*q)->rear->next=newNode;
+		(*q)->rear=newNode;
+		(*q)->rear->next=NULL;
 	}
-	return q;
 }
 
-struct queue *display(struct queue *q){
-	struct node *ptr;
-	ptr=q->front;
-	if(ptr==NULL){
-		printf("\n QUEUE is empty");
+void dequeue(struct queue **q){
+	if((*q)->front==NULL){
+		printf("underflow");
 	}
 	else{
-		printf("\n");
-		while(ptr!=q->rear){
-			printf("%d\t",ptr->data);
-			ptr=ptr->next;
-		}
-		printf("%d\t",ptr->data);
+		
+		(*q)->front=(*q)->front->next;
 	}
-	return q;
+}
+
+void displayQueue(struct queue **q){
+	struct node* newNode=(*q)->front;
+	
+	while(newNode!= NULL){
+		printf("%d",newNode->data);
+		if(newNode->next!=NULL){
+			printf("->");
+		}
+		newNode=newNode->next;
+	}
+	printf("\n");
+}
+
+void create_queue(struct queue **q){
+	(*q)->front = NULL;
+	(*q)->rear = NULL;
+}
+
+int main(){
+	struct queue *q=(struct queue*)malloc(sizeof(struct queue));
+	create_queue(&q);
+	enqueue(1,&q);
+	enqueue(2,&q);
+	displayQueue(&q);
+	dequeue(&q);
+	displayQueue(&q);
 }
